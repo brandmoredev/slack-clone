@@ -24,6 +24,8 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
         <CardContent className="space-y-5 px-0 pb-0">
           <form className="space-y-5">
             <Input
+              type="email"
+              name="email"
               disabled={false}
               placeholder="name@work-email.com"
               value={email}
@@ -33,6 +35,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
               />
             <Input
               type="password"
+              name="password"
               disabled={false}
               placeholder="Password"
               value={password}
@@ -42,6 +45,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
             />
             <Input
               type="password"
+              name="Confirm password"
               disabled={false}
               placeholder="Confirm password"
               value={confirmPassword}
