@@ -1,3 +1,4 @@
+import { useAuthActions } from "@convex-dev/auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -5,6 +6,7 @@ import { FaGithub } from "react-icons/fa"
 import { FcGoogle } from "react-icons/fc"
 import { SignInFlow } from "../types"
 import { useState } from "react"
+import { TriangleAlert } from "lucide-react"
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
@@ -14,6 +16,32 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [error, setError] = useState("")
+  const [pending, setPending] = useState(false)
+
+  const { signIn } = useAuthActions()
+
+  const handleProviderSignUp = (value: "github" | "google") => {
+    setPending(true)
+    void signIn(value)
+      .finally(() => setPending(false)
+    )
+  }
+
+  const handlePasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match")
+      return
+    }
+    setPending(true)
+    void signIn("password", { email, password, flow: "signUp" as SignInFlow })
+      .catch(() => {
+        setError("Password must be at least 8 characters long")
+      })
+      .finally(() => setPending(false))
+  }
 
   return (
     <div className="md:h-auto 3xl:w-[420px] flex flex-col items-center">
@@ -21,8 +49,15 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
       <h1 className="text-lg my-5">or choose another way to sign in</h1>
       
       <Card className="border-none shadow-none w-full max-w-sm"> {/*border-none shadow-none*/}
+        {!!error && (
+          <div className="w-full bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive">
+            <TriangleAlert className="size-5" />
+            <p>{error}</p>
+          </div>
+        )}
+
         <CardContent className="space-y-5 px-0 pb-0">
-          <form className="space-y-5">
+          <form onSubmit={handlePasswordSignUp} className="space-y-5">
             <Input
               type="email"
               name="email"
@@ -36,7 +71,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
             <Input
               type="password"
               name="password"
-              disabled={false}
+              disabled={pending}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -46,7 +81,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
             <Input
               type="password"
               name="Confirm password"
-              disabled={false}
+              disabled={pending}
               placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -57,7 +92,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
               className="w-full text-lg"
               type="submit"
               size="lg"
-              disabled={false}
+              disabled={pending}
               >
               Continue
             </Button>
@@ -68,20 +103,20 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
           <div className="flex justify-between gap-y-2.5">
             <Button
               className="text-lg w-45"
-              disabled={false}
-              onClick={() => {}}
+              disabled={pending}
               variant="outline"
               size="lg"
+              onClick={() => handleProviderSignUp("google")}
               >
               <FcGoogle className="size-5"/>
               Google
             </Button>
             <Button
               className="text-lg w-45"
-              disabled={false}
-              onClick={() => {}}
+              disabled={pending}
               variant="outline"
               size="lg"
+              onClick={() => handleProviderSignUp("github")}
               >
               <FaGithub className="size-5"/>
               Github
