@@ -65,7 +65,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
             <Button
               className="text-lg w-45"
               disabled={false}
-              onClick={() => {}}
+              onClick={() => handleProviderSignIn("google")}
               variant="outline"
               size="lg"
               >
