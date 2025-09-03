@@ -13,6 +13,7 @@ interface SignUpCardProps {
 }
 
 const SignUpCard = ({ setState }: SignUpCardProps) => {
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
@@ -36,7 +37,7 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
       return
     }
     setPending(true)
-    void signIn("password", { email, password, flow: "signUp" as SignInFlow })
+    void signIn("password", { name, email, password, flow: "signUp" as SignInFlow })
       .catch(() => {
         setError("Password must be at least 8 characters long")
       })
@@ -58,6 +59,15 @@ const SignUpCard = ({ setState }: SignUpCardProps) => {
 
         <CardContent className="space-y-5 px-0 pb-0">
           <form onSubmit={handlePasswordSignUp} className="space-y-5">
+            <Input
+              name="name"
+              disabled={false}
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="py-5 text-lg"
+              />
             <Input
               type="email"
               name="email"
