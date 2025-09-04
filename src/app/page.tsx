@@ -1,9 +1,12 @@
 "use client"
 
 import { GlobalContext } from "@/components/ContextProvider";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Header } from "@/components/ui/Header/Header";
 import { ProgressBar } from "@/components/ui/Loader/ProgressBar";
-import UserButton from "@/features/auth/components/userButton";
 import { useGetWorkspaces } from "@/features/workspaces/api/useGetWorkspaces";
+import { WorkSpacesCard } from "@/features/workspaces/components/workSpacesCard";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useMemo } from "react";
 
@@ -18,7 +21,7 @@ export default function Home() {
     if (isLoading) return;
 
     if (workspaceId) {
-      router.replace(`/workspace/${workspaceId}`)
+      // router.replace(`/workspace/${workspaceId}`)
     } else {
       setCreateWorkspaceOpen(true)
     }
@@ -33,13 +36,24 @@ export default function Home() {
     )
   }
 
-  if (workspaceId) return null;
+  // if (workspaceId) return null;
 
   return (
-    <div>
-      Home Page
+    <div className="bg-[#4A154B] h-full">
+      <Header />
 
-      <UserButton />
+      <div className="p-6 space-y-5">
+        <WorkSpacesCard user="USER" workspaces={data!} />
+        <Card className="rounded-sm">
+          <CardHeader>
+            <CardContent className="flex justify-between items-center">
+              <h1 className="text-lg font-semibold">Want to use Slack with a different team?</h1>
+              <Button variant="outline">CREATE A NEW WORKSPACE</Button>
+            </CardContent>
+          </CardHeader>
+        </Card>
+      </div>
+
     </div>
   );
 }
