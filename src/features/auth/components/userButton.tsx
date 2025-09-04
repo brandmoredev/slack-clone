@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { useCurrentUser } from "../hooks/useCurrentUser"
+import { useCurrentUser } from "../api/useCurrentUser"
 import { Loader, LogOut } from "lucide-react"
 import { useAuthActions } from "@convex-dev/auth/react"
 
@@ -21,7 +21,6 @@ const UserButton = () => {
     return null
   }
 
-  console.log("USER", data)
   const { name, image } = data
 
   const avatarFallback = name?.charAt(0).toUpperCase();
