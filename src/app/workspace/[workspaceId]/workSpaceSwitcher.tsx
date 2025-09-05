@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useGetWorkspaceById } from "@/features/workspaces/api/useGetWorkspaceById"
 import { useGetWorkspaces } from "@/features/workspaces/api/useGetWorkspaces"
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
