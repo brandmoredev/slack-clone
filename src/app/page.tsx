@@ -39,10 +39,10 @@ export default function Home() {
   // if (workspaceId) return null;
 
   return (
-    <div className="bg-[#4A154B] h-full">
+    <div className="bg-[#4A154B] h-full w-full">
       <Header />
 
-      <div className="p-6 space-y-5">
+      <div className="p-6 space-y-5 w-full">
         <WorkSpacesCard workspaces={data!} />
         <Card className="rounded-sm">
           <CardHeader>
