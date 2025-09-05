@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { WorkspaceResponseType } from "../api/useCreateWorkspace"
 import { Button } from "@/components/ui/button"
-import { Separator } from "@/components/ui/separator"
 import { PiHandWaving } from "react-icons/pi";
 import { useRouter } from "next/navigation"
 import { useCurrentUser } from "@/features/auth/api/useCurrentUser"
