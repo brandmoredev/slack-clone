@@ -9,10 +9,10 @@ import { createContext, Dispatch, SetStateAction, useEffect, useState } from "re
 import { useCurrentUser } from "@/features/auth/api/useCurrentUser";
 
 interface GlobalContextType {
- createWorkspaceOpen: boolean,
- setCreateWorkspaceOpen: (open: boolean) => void;
- user: DocumentByName<DataModel, "users"> | null;
- setUser: Dispatch<SetStateAction<null>>
+  createWorkspaceOpen: boolean,
+  setCreateWorkspaceOpen: (open: boolean) => void;
+  user: DocumentByName<DataModel, "users"> | null;
+  setUser: Dispatch<SetStateAction<DocumentByName<DataModel, "users"> | null>>;
 }
 
 
@@ -25,13 +25,13 @@ export const GlobalContext = createContext<GlobalContextType>({
 
 export const GlobalContextProvider = ({ children } : { children: React.ReactNode }) => {
   const { data } = useCurrentUser() //get current user data from convex
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState<DocumentByName<DataModel, "users"> | null>(null)
   
   // Workspace modal
   const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
 
   useEffect(() => {
-    setUser(data => data ?? null)
+    setUser(data ?? null)
   }, [data])
 
   return (
