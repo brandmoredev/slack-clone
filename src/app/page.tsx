@@ -43,7 +43,7 @@ export default function Home() {
       <Header />
 
       <div className="p-6 space-y-5">
-        <WorkSpacesCard user="USER" workspaces={data!} />
+        <WorkSpacesCard workspaces={data!} />
         <Card className="rounded-sm">
           <CardHeader>
             <CardContent className="flex justify-between items-center">

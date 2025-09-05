@@ -2,16 +2,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { WorkspaceResponseType } from "../api/useCreateWorkspace"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { useCurrentUser } from "@/features/auth/api/useCurrentUser"
+import { useUser } from "@/features/auth/api/useUser"
 
 
 interface WorkSpacesCardProps {
-  user: string,
   workspaces: WorkspaceResponseType[]
 }
 
-export const WorkSpacesCard = ({ user, workspaces }: WorkSpacesCardProps) => {
-  const { data, isLoading } = useCurrentUser();
+export const WorkSpacesCard = ({ workspaces }: WorkSpacesCardProps) => {
+  const { user } = useUser();
 
   if (!workspaces) return null;
 
@@ -19,7 +18,7 @@ export const WorkSpacesCard = ({ user, workspaces }: WorkSpacesCardProps) => {
     return (
       <Card className="rounded-sm">
         <CardHeader>
-          <CardTitle>Workspaces for { isLoading? "..." : data?.name }</CardTitle>
+          <CardTitle>Workspaces for { user?.name }</CardTitle>
         </CardHeader>
         <Separator />
         <CardContent>

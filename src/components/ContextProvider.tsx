@@ -5,12 +5,14 @@ import { DocumentByName } from "convex/server";
 // Update the import path below if your dataModel file is located elsewhere
 import type { DataModel } from "../../convex/_generated/dataModel";
 
-import { createContext, useState } from "react";
+import { createContext, Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useCurrentUser } from "@/features/auth/api/useCurrentUser";
 
 interface GlobalContextType {
  createWorkspaceOpen: boolean,
  setCreateWorkspaceOpen: (open: boolean) => void;
  user: DocumentByName<DataModel, "users"> | null;
+ setUser: Dispatch<SetStateAction<null>>
 }
 
 
@@ -18,16 +20,22 @@ export const GlobalContext = createContext<GlobalContextType>({
   createWorkspaceOpen: false,
   setCreateWorkspaceOpen: () => {},
   user: null,
+  setUser: () => {}
 });
 
 export const GlobalContextProvider = ({ children } : { children: React.ReactNode }) => {
+  const { data } = useCurrentUser() //get current user data from convex
+  const [user, setUser] = useState(null)
   
   // Workspace modal
   const [createWorkspaceOpen, setCreateWorkspaceOpen] = useState(false);
-  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    setUser(data => data ?? null)
+  }, [data])
 
   return (
-    <GlobalContext.Provider value={{ createWorkspaceOpen, setCreateWorkspaceOpen, user }}>
+    <GlobalContext.Provider value={{ createWorkspaceOpen, setCreateWorkspaceOpen, user, setUser }}>
       {children}
     </GlobalContext.Provider>
   );
