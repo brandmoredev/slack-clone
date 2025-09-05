@@ -2,9 +2,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { WorkspaceResponseType } from "../api/useCreateWorkspace"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { useUser } from "@/features/auth/api/useUser"
 import { PiHandWaving } from "react-icons/pi";
 import { useRouter } from "next/navigation"
+import { useCurrentUser } from "@/features/auth/api/useCurrentUser"
 
 
 interface WorkSpacesCardProps {
@@ -14,7 +14,7 @@ interface WorkSpacesCardProps {
 
 export const WorkSpacesCard = ({ workspaces }: WorkSpacesCardProps) => {
   const router = useRouter();
-  const { user } = useUser();
+  const { data } = useCurrentUser()
 
   const handleClick = (workSpaceId: string | undefined) => {
     router.replace(`/workspace/${workSpaceId}`)
@@ -30,7 +30,7 @@ export const WorkSpacesCard = ({ workspaces }: WorkSpacesCardProps) => {
         </h1>
         <Card className="rounded-sm w-full">
           <CardHeader>
-            <CardTitle>Workspaces for { user?.name }</CardTitle>
+            <CardTitle>Workspaces for { data?.name }</CardTitle>
           </CardHeader>
           <Separator />
           <CardContent>
