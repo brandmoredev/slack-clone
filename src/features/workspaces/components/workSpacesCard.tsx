@@ -26,16 +26,16 @@ export const WorkSpacesCard = ({ workspaces }: WorkSpacesCardProps) => {
     return (
       <div className="flex flex-col space-y-5">
         <h1 className="flex items-center gap-2 text-white text-3xl md:text-5xl font-semibold">
-          <PiHandWaving /> Welcome Back
+          <PiHandWaving className="text-yellow-500"/> Welcome Back
         </h1>
-        <Card className="rounded-sm w-full">
-          <CardHeader>
-            <CardTitle>Workspaces for { data?.name }</CardTitle>
+        <Card className="rounded-sm w-full p-0 gap-0 outline-4 outline-[#FFF3]">
+          <CardHeader className="bg-[#ECDEEC] h-20 grid-rows-1">
+            <CardTitle className="text-lg font-normal my-auto">Workspaces for { data?.name }</CardTitle>
           </CardHeader>
-          <Separator />
-          <CardContent>
+          {/* <Separator /> */}
+          <CardContent className="flex-col p-0">
             { workspaces?.map((workspace) => (
-              <div key={workspace?._id} className="w-full flex justify-between items-center">
+              <div key={workspace?._id} className="w-full py-3 px-6 border-b flex justify-between items-center hover:bg-accent/90">
                 <div className="flex">
                   <h3 className="flex-1">{workspace?.name}</h3>
                 </div>
