@@ -3,7 +3,11 @@
 import { Progress } from "@/components/ui/progress"
 import { useEffect, useState } from "react"
 
-export const ProgressBar = () => {
+interface ProgressBarProps {
+  className: string
+}
+
+export const ProgressBar = ({ className }: ProgressBarProps) => {
   const [progress, setProgress] = useState(13)
 
   useEffect(() => {
@@ -29,5 +33,5 @@ export const ProgressBar = () => {
     }
   }, [])
 
-  return <Progress value={progress} className="w-[60%] max-w-[400px]" />
+  return <Progress value={progress} className={`w-[60%] max-w-[400px] ${className}`} />
 }

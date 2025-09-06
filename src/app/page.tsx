@@ -18,32 +18,26 @@ export default function Home() {
   const workspaceId = useMemo(() => data?.[0]?._id.toString(), [data])
 
   useEffect(() => {
-    if (isLoading) return;
-
-    if (workspaceId) {
-      // router.replace(`/workspace/${workspaceId}`)
-    } else {
+    if (!isLoading && !data) {
       setCreateWorkspaceOpen(true)
     }
-  }, [workspaceId, isLoading, createWorkspaceOpen, setCreateWorkspaceOpen, router])
-
-  if (isLoading) {
-    return (
-      <div className="h-full flex flex-col justify-center items-center">
-        <p>Checking for workspaces...</p>
-        <ProgressBar />
-      </div>
-    )
-  }
-
-  // if (workspaceId) return null;
+  }, [isLoading, data, workspaceId, createWorkspaceOpen, setCreateWorkspaceOpen, router])
 
   return (
     <div className="bg-[#4A154B] h-full w-full">
       <Header />
 
       <div className="p-6 space-y-5 w-full">
-        <WorkSpacesCard workspaces={data!} />
+        { isLoading
+          ? (
+              <div className="h-full flex flex-col justify-center items-center">
+                <p className="text-accent">Checking for workspaces...</p>
+                <ProgressBar className="text-accent" />
+              </div>
+            )
+          : <WorkSpacesCard workspaces={data!} />
+
+        }
         <Card className="rounded-sm">
           <CardHeader>
             <CardContent className="flex justify-between items-center">
