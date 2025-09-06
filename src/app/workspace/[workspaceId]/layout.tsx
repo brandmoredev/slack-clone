@@ -18,6 +18,7 @@ const WorkSpaceLayout = ({ children }: WorkSpaceIdLayourProp) => {
         <SideBar />
         <div className="flex-1 p-1">
           <ResizablePanelGroup
+            id="resizable-workspace"
             direction="horizontal"
             className="rounded-lg"
             autoSaveId="handle-workspace-layout"
