@@ -23,7 +23,7 @@ export const WorkSpaceSwitcher = () => {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="group">
+      <DropdownMenuTrigger asChild id="sidebar-ws-drp-trigger">
         <Button className="size-9 relative overflow-hidden bg-[#ABABAD] hover:bg-[#ABABAD]/80 text-slate-800 font-semibold text-xl">
           {workSpaceLoading ? (
             <Loader className="size-5 animate-spin shrink-0"/>

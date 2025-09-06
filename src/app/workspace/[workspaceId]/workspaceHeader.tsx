@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { Hint } from "@/components/ui/hint"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Edit, Settings } from "lucide-react"
 import { PiCaretDown } from "react-icons/pi"
@@ -52,12 +53,16 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkSpaceHeaderProps) =>
       </DropdownMenu>
 
       <div className="flex items-center justify-end gap-2">
-        <Button variant="transparent" size="iconSm">
-          <Settings className="size-5 text-accent/70"/>
-        </Button>
-        <Button variant="transparent" size="iconSm">
-          <Edit className="size-5 text-accent/70"/>
-        </Button>
+        <Hint label="Settings" side="bottom">
+          <Button variant="transparent" size="iconSm">
+            <Settings className="size-5 text-accent/70"/>
+          </Button>
+        </Hint>
+        <Hint label="New Message" side="bottom">
+          <Button variant="transparent" size="iconSm">
+            <Edit className="size-5 text-accent/70"/>
+          </Button>
+        </Hint>
       </div>
     </div>
   )

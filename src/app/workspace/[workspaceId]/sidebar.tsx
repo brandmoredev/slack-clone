@@ -2,10 +2,10 @@ import UserButton from "@/features/auth/components/userButton"
 import { WorkSpaceSwitcher } from "./workSpaceSwitcher"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { useCreateWorkspaceModal } from "@/hooks/useCreateWorkSpaceModal"
 import { SidebarButton } from "./sidebarButton"
 import { Home,MessageCircle, Bell, File, Ellipsis } from "lucide-react"
+import { Hint } from "@/components/ui/hint"
 
 export const SideBar = () => {
   const { setCreateWorkspaceOpen } = useCreateWorkspaceModal()
@@ -20,30 +20,19 @@ export const SideBar = () => {
       <SidebarButton icon={Ellipsis} label="More" />
 
       <div className="flex flex-col items-center justify-center gap-y-3 mt-auto">
-        <Tooltip>
-          <TooltipTrigger asChild>
+        <Hint label="Create New" side="right">
             <Button
-              className="rounded-4xl overflow-hidden bg-accent/50 hover:bg-accent/40 font-semibold text-xl text-accent"
+              className="w-10 h-10 rounded-4xl overflow-hidden bg-accent/50 hover:bg-accent/40 font-semibold text-xl text-accent"
               onClick={() => setCreateWorkspaceOpen(true)}
             >
               <PlusIcon />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create New</p>
-          </TooltipContent>
-        </Tooltip>
-
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div>
-              <UserButton />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Create New</p>
-          </TooltipContent>
-        </Tooltip>
+        </Hint>
+        <Hint label="User Profile" side="right">
+          <div>
+            <UserButton />
+          </div>
+        </Hint>
       </div>
     </aside>
   )
