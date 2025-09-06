@@ -1,3 +1,5 @@
+"use client"
+
 import { useAuthActions } from "@convex-dev/auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -51,7 +53,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
           </div>
         )}
         <CardContent className="space-y-5 px-0 pb-0">
-          <form onSubmit={handlePasswordSignIn}className="space-y-5">
+          <form onSubmit={handlePasswordSignIn} className="space-y-5">
             <Input
               type="email"
               name="email"
