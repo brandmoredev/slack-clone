@@ -2,10 +2,10 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
 import { DocumentByName } from "convex/server";
-import type { DataModel } from "../../../../convex/_generated/dataModel";
+import type { DataModel, Id } from "../../../../convex/_generated/dataModel";
 
 type RequestType = {
-  name: string
+  id: Id<"workspaces">
 }
 
 export type WorkspaceResponseType = DocumentByName<DataModel, "workspaces"> | null
@@ -17,20 +17,16 @@ type Options = {
   throwError?: boolean
 }
 
-export const useCreateWorkspace = () => {
+export const useRemoveWorkspace = () => {
   const [data, setData] = useState<WorkspaceResponseType>(null)
   const [error, setError] = useState<Error | null>(null)
   const [status, setStatus] = useState<"settled" | "pending" | "error" | "success" | null>(null)
-
-  // const [isPending, setIsPending] = useState(false)
-  // const [isSettled, setIsSettled] = useState(false)
-  // const [isError, setIsError] = useState(false)
 
   const isPending = useMemo(() => status === "pending", [status])
   const isSettled = useMemo(() => status === "settled", [status])
   const isError = useMemo(() => status === "error", [status])
 
-  const mutation = useMutation(api.workspaces.create);
+  const mutation = useMutation(api.workspaces.remove);
 
   const mutate = useCallback(async (values: RequestType, options: Options) => {
     try {
