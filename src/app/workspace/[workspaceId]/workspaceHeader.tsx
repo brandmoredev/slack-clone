@@ -4,7 +4,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Edit, Settings } from "lucide-react"
 import { PiCaretDown } from "react-icons/pi"
 import { Doc } from "../../../../convex/_generated/dataModel"
-import { PreferencesModal } from "./preferencesModal"
+import { PreferencesModal } from "./(preferences)/preferencesModal"
 import { useState } from "react"
 
 interface WorkSpaceHeaderProps {
