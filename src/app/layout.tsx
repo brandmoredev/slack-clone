@@ -1,8 +1,8 @@
-import { ConvexClientProvider } from "@/components/ConvexClientProvider";
+import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
 import { ConvexAuthNextjsServerProvider } from "@convex-dev/auth/nextjs/server";
-import { GlobalContextProvider } from "@/components/ContextProvider";
+import { GlobalContextProvider } from "@/components/providers/ContextProvider";
 import { Toaster } from "@/components/ui/sonner";
-import { Modals } from "@/components/modals";
+import { Modals } from "@/components/modals/modals";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";

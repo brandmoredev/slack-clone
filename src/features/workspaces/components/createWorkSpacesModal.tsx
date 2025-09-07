@@ -1,6 +1,6 @@
 "use client"
 
-import { GlobalContext } from "@/components/ContextProvider";
+import { GlobalContext } from "@/components/providers/ContextProvider";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {

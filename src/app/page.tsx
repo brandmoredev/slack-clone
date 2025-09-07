@@ -1,9 +1,9 @@
 "use client"
 
-import { GlobalContext } from "@/components/ContextProvider";
+import { GlobalContext } from "@/components/providers/ContextProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Header } from "@/components/ui/Header/Header";
+import { Header } from "@/components/Header";
 import { ProgressBar } from "@/components/ui/Loader/ProgressBar";
 import { useGetWorkspaces } from "@/features/workspaces/api/useGetWorkspaces";
 import { WorkSpacesCard } from "@/features/workspaces/components/workSpacesCard";

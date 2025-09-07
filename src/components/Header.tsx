@@ -1,7 +1,7 @@
 import { useContext } from "react"
-import { Button } from "../button"
+import { Button } from "./ui/button"
 import UserButton from "@/features/auth/components/userButton"
-import { GlobalContext } from "@/components/ContextProvider"
+import { GlobalContext } from "@/components/providers/ContextProvider"
 
 export const Header = () => {
   const { setCreateWorkspaceOpen } = useContext(GlobalContext)

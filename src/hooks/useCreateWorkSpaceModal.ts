@@ -1,4 +1,4 @@
-import { GlobalContext } from "@/components/ContextProvider"
+import { GlobalContext } from "@/components/providers/ContextProvider"
 import { useContext } from "react"
 
 export const useCreateWorkspaceModal = () => {
