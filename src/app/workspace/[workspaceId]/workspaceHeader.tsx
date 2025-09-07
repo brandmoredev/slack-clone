@@ -20,7 +20,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkSpaceHeaderProps) =>
       <div className="w-full flex justify-between items-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-              <Button variant="transparent" className="text-lg font-bold shrink overflow-hidden">
+              <Button variant="transparent" className="text-lg font-bold shrink overflow-hidden text-white">
                 <span className="truncate text-left min-w-3">{workspace.name}</span>
                 <PiCaretDown className="size-3 shrink-0"/>
               </Button>

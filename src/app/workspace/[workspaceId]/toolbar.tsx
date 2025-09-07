@@ -11,13 +11,13 @@ export const Toolbar = () => {
     <nav className="bg-[#4A154B] flex items-center justify-between h-10 p-1.5">
       <div className="flex-1 flex items-center justify-end px-2">
         <Button variant="transparent" size="iconSm">
-          <ArrowLeft className="size-5"/>
+          <ArrowLeft className="size-5 text-white"/>
         </Button>
         <Button variant="transparent" size="iconSm">
-          <ArrowRight className="size-5"/>
+          <ArrowRight className="size-5 text-white"/>
         </Button>
         <Button variant="transparent" size="iconSm">
-          <Clock3 className="size-5"/>
+          <Clock3 className="size-5 text-white"/>
         </Button>
       </div>
       <div className="min-w-[280px] max-w-[642px] grow-2 shrink">

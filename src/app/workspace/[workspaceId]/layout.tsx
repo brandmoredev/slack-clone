@@ -1,6 +1,6 @@
 "use client"
 
-import { SideBar } from "./sidebar"
+import { SideBar } from "./(sidebar)/sidebar"
 import { Toolbar } from "./toolbar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
 import { WorkspaceSideBar } from "./workspaceSideBar"

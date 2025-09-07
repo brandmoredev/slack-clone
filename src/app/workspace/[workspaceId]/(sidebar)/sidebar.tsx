@@ -1,5 +1,5 @@
 import UserButton from "@/features/auth/components/userButton"
-import { WorkSpaceSwitcher } from "./workSpaceSwitcher"
+import { WorkSpaceSwitcher } from "../workSpaceSwitcher"
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "lucide-react"
 import { useCreateWorkspaceModal } from "@/hooks/useCreateWorkSpaceModal"

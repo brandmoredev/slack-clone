@@ -6,6 +6,10 @@ import { useGetWorkspaceById } from "@/features/workspaces/api/useGetWorkspaceBy
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
 import { AlertTriangle, Loader, UserPlus } from "lucide-react"
 import { WorkspaceHeader } from "./workspaceHeader"
+import { SidebarItem } from "./sidebarItem"
+import { Hash } from "lucide-react"
+import { FaCaretDown, FaCaretRight } from "react-icons/fa"
+
 
 export const WorkspaceSideBar = () => {
   const workspaceId = useWorkSpaceId()
@@ -33,6 +37,11 @@ export const WorkspaceSideBar = () => {
   return (
     <div className="h-full w-full bg-[#F9EDFF1C] p-2 flex flex-col justify-between items-start relative">
       <WorkspaceHeader workspace={workspace!} isAdmin={member.role === "admin"}/>
+      <div className="flex-1 flex flex-col justify-start">
+        <SidebarItem label="channels" icon={FaCaretDown} />
+        <SidebarItem label={`all-${workspace.name}`} icon={Hash} />
+        <SidebarItem label={`new-${workspace.name}`} icon={Hash} />
+      </div>
       <Button variant="secondary" size="sm" className="w-full h-7 text-xs font-semibold">
         <UserPlus />
         <span className="">Invite teammates</span>
