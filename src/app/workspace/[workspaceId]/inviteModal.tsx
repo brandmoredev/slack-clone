@@ -17,6 +17,7 @@ import { Copy, RefreshCcw } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
 import { useNewJoinCode } from "@/features/workspaces/api/useNewJoinCode"
+import { useConfirm } from "@/hooks/useConfirm"
 
 
 type InviteMembersModalProps = {
@@ -31,8 +32,12 @@ export const InviteMembersModal = ({ joinCode, name, open, setOpen }: InviteMemb
   const [loading, setLoading] = useState(false)
 
   const workspaceId = useWorkSpaceId();
-
   const { mutate, isPending } = useNewJoinCode()
+
+  const [ConfirmDialog, confirm] = useConfirm(
+    "Are you sure?",
+    "This will deactivate the current invite code and generate a new one."
+  )
 
   // const parseEmails = (input: string): string[] => {
   //   return input
@@ -66,9 +71,13 @@ export const InviteMembersModal = ({ joinCode, name, open, setOpen }: InviteMemb
   }
 
   const handleNewCode = async () => {
+    const ok = await confirm()
+
+    if (!ok) return
+
     await mutate({ workspaceId }, {
       onSuccess: () => {
-        toast.success("Invite code regenerated")
+        toast.success("New invite code regenerated")
       },
       onError: () => {
         toast.error("Failed to regenerate invite code")
@@ -77,62 +86,66 @@ export const InviteMembersModal = ({ joinCode, name, open, setOpen }: InviteMemb
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="text-2xl">Invite people to {name}</DialogTitle>
-          <DialogDescription>
-            Send invites or share the join code below.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <ConfirmDialog />
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-2xl">Invite people to {name}</DialogTitle>
+            <DialogDescription>
+              Send invites or share the join code below.
+            </DialogDescription>
+          </DialogHeader>
 
-        <form onSubmit={() => {}} className="space-y-4">
-          <div className="grid gap-2">
-            <Textarea
-              id="emails"
-              value={emails}
-              disabled={loading}
-              onChange={(e) => setEmails(e.target.value)}
-              placeholder={`example1@email.com,\nexample2@email.com`}
-              rows={4}
-            />
+          <form onSubmit={() => {}} className="space-y-4">
+            <div className="grid gap-2">
+              <Textarea
+                id="emails"
+                value={emails}
+                disabled={loading}
+                onChange={(e) => setEmails(e.target.value)}
+                placeholder={`example1@email.com,\nexample2@email.com`}
+                rows={4}
+              />
+            </div>
+
+            <DialogFooter>
+              <Button type="submit" disabled={loading}>
+                {loading ? "Sending..." : "Send Invites"}
+              </Button>
+            </DialogFooter>
+          </form>
+
+          <Separator className="my-4" />
+
+          <div className="flex flex-col items-center justify center gap-2">
+            <p>OR INVITE WITH THE JOIN CODE BELOW</p>
+            <p className="text-5xl font-bold tracking-widest uppercase">
+              {joinCode}
+            </p>
+            <div className="w-full flex justify-between pt-4">
+              <Button
+                disabled={isPending}
+                type="button"
+                variant="ghost"
+                onClick={handleNewCode}
+              >
+                Newcode
+                <RefreshCcw className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="text-sky-600"
+                onClick={handleCopy}
+              >
+                Copy link
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
-
-          <DialogFooter>
-            <Button type="submit" disabled={loading}>
-              {loading ? "Sending..." : "Send Invites"}
-            </Button>
-          </DialogFooter>
-        </form>
-
-        <Separator className="my-4" />
-
-        <div className="flex flex-col items-center justify center gap-2">
-          <p>OR SHARE THE JOIN CODE BELOW</p>
-          <p className="text-5xl font-bold tracking-widest uppercase">
-            {joinCode}
-          </p>
-          <Button
-            disabled={isPending}
-            type="button"
-            variant="ghost"
-            className="text-sky-600"
-            onClick={handleNewCode}
-          >
-            Newcode
-            <RefreshCcw className="h-4 w-4" />
-          </Button>
-          <Button
-            type="button"
-            variant="ghost"
-            className="text-sky-600"
-            onClick={handleCopy}
-          >
-            Copy link
-            <Copy className="h-4 w-4" />
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   )
 }
