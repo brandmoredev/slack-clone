@@ -4,11 +4,11 @@ import { Button } from "@/components/ui/button"
 import { useCurrentMember } from "@/features/members/api/useCurrentMember"
 import { useGetWorkspaceById } from "@/features/workspaces/api/useGetWorkspaceById"
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
-import { AlertTriangle, Loader, UserPlus } from "lucide-react"
+import { AlertTriangle, Loader, SendHorizonal, UserPlus } from "lucide-react"
 import { WorkspaceHeader } from "./workspaceHeader"
 import { SidebarItem } from "./sidebarItem"
 import { Hash } from "lucide-react"
-import { FaCaretDown, FaCaretRight } from "react-icons/fa"
+import { FaCaretDown } from "react-icons/fa"
 
 
 export const WorkspaceSideBar = () => {
@@ -37,10 +37,11 @@ export const WorkspaceSideBar = () => {
   return (
     <div className="h-full w-full bg-[#F9EDFF1C] p-2 flex flex-col justify-between items-start relative">
       <WorkspaceHeader workspace={workspace!} isAdmin={member.role === "admin"}/>
-      <div className="flex-1 flex flex-col justify-start">
-        <SidebarItem label="channels" icon={FaCaretDown} />
-        <SidebarItem label={`all-${workspace.name}`} icon={Hash} />
-        <SidebarItem label={`new-${workspace.name}`} icon={Hash} />
+      <div className="flex-1 flex flex-col justify-start w-full">
+        <SidebarItem label="Drafts & sent" icon={SendHorizonal} onClick={() => {}} id="draft" className="w-50"/>
+        <SidebarItem label="Channels" icon={FaCaretDown} id="channel1"/>
+        <SidebarItem label={`all-${workspace.name}`} icon={Hash} id="channel1" />
+        <SidebarItem label={`new-${workspace.name}`} icon={Hash} id="channel1" isActive/>
       </div>
       <Button variant="secondary" size="sm" className="w-full h-7 text-xs font-semibold">
         <UserPlus />
