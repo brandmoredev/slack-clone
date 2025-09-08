@@ -12,6 +12,7 @@ import { useGetChannels } from "@/features/channels/api/useGetChannels"
 import { WorkspaceSection } from "./workspaceSection"
 import { useGetMembers } from "@/features/members/api/useGetMembers"
 import { UserItem } from "./(workspaceSideBar)/userItem"
+import { useCreateChannelModal } from "@/hooks/useCreateChannelModal"
 
 
 export const WorkspaceSideBar = () => {
@@ -20,6 +21,8 @@ export const WorkspaceSideBar = () => {
   const { data: member, isLoading: memberLoading } = useCurrentMember({ workspaceId })
   const { data: channels, isLoading: channelsLoading } = useGetChannels({ workspaceId })
   const { data: members, isLoading: membersLoading } = useGetMembers({ workspaceId })
+
+  const { createChannelOpen, setCreateChannelOpen } = useCreateChannelModal();
 
   if (workspaceLoading || memberLoading) {
     return (
@@ -47,7 +50,11 @@ export const WorkspaceSideBar = () => {
         
 
 
-        <WorkspaceSection label="Channels" onNew={() => {}} hint="Add new channel">
+        <WorkspaceSection
+          label="Channels"
+          onNew={member.role === "admin" ? () => setCreateChannelOpen(true) : undefined }
+          hint="Add new channel"
+        >
           {channelsLoading &&
             <div className="bg-[#F9EDFF1C] h-full w-full flex flex-col items-center justify-center">
               <Loader className="size-5 animate-spin text-white"/>

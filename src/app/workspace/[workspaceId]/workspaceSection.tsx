@@ -43,6 +43,7 @@ export const WorkspaceSection = ({
             <Button
               variant="transparent"
               className="flex items-center gap-1.5 justify-start font-normal h-7 px-4 text-md overflow-50 text-[#F9EDFFCC]"
+              onClick={onNew}
             >
               <PlusIcon />
             </Button>
