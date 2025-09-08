@@ -39,7 +39,6 @@ export const SidebarItem = ({
   isActive,
   variant,
   className,
-  onClick
 }: SidebarItemProps) => {
   const appliedVariant = isActive ? "active" : (variant ?? "default")
 
@@ -47,12 +46,11 @@ export const SidebarItem = ({
 
   return (
     <Link
-      href={onClick ? "#" : `/workspace/${workspaceId}/channel/${id}` }
+      href={`/workspace/${workspaceId}/channel/${id}`}
     >
       <Button
         variant="transparent"
         className={cn(sidebarItemVariants({ variant: appliedVariant }), className)}
-        onClick={onClick}
       >
           <Icon className="size-4 shrink-0"/>
           <span className="font-normal text-md truncate">{label}</span>
