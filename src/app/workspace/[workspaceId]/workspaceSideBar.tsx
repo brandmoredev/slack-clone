@@ -13,6 +13,7 @@ import { WorkspaceSection } from "./workspaceSection"
 import { useGetMembers } from "@/features/members/api/useGetMembers"
 import { UserItem } from "./(workspaceSideBar)/userItem"
 import { useCreateChannelModal } from "@/hooks/useCreateChannelModal"
+import { InviteMembersModal } from "./inviteModal"
 
 
 export const WorkspaceSideBar = () => {

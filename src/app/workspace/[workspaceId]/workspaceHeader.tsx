@@ -6,6 +6,7 @@ import { PiCaretDown } from "react-icons/pi"
 import { Doc } from "../../../../convex/_generated/dataModel"
 import { PreferencesModal } from "./(preferences)/preferencesModal"
 import { useState } from "react"
+import { InviteMembersModal } from "./inviteModal"
 
 interface WorkSpaceHeaderProps {
   workspace: Doc<"workspaces">,
@@ -13,9 +14,16 @@ interface WorkSpaceHeaderProps {
 }
 export const WorkspaceHeader = ({ workspace, isAdmin }: WorkSpaceHeaderProps) => {
   const [preferencesOpen, setPreferencesOpen] = useState(false)
+  const [openInviteModal, setOpenInviteModal] = useState(false)
 
   return (
     <>
+      <InviteMembersModal
+        joinCode={workspace.joinCode}
+        name={workspace.name}
+        open={openInviteModal}
+        setOpen={setOpenInviteModal}
+      />
       {preferencesOpen && <PreferencesModal open={preferencesOpen} setOpen={setPreferencesOpen} workspace={workspace}/>}
       <div className="w-full flex justify-between items-center">
         <DropdownMenu>
@@ -41,7 +49,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: WorkSpaceHeaderProps) =>
                 <DropdownMenuSeparator/>
                 <DropdownMenuItem
                   className="cursor-pointer py-2"
-                  onClick={() => {}}
+                  onClick={() => setOpenInviteModal(true)}
                 >
                   Invite people to {workspace.name}
                 </DropdownMenuItem>
