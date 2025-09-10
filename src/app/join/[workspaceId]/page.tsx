@@ -13,7 +13,6 @@ import {
 import {
   InputOTP,
   InputOTPGroup,
-  InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
@@ -21,37 +20,60 @@ import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
 import { useGetWorkspacePublicById } from "@/features/workspaces/api/useGetWorkspacePublicById"
-import Image from "next/image"
 import { FaSlack } from "react-icons/fa"
+import { Loader } from "lucide-react"
+import { useJoin } from "@/features/workspaces/api/useJoin"
+import { useCurrentUser } from "@/features/auth/api/useCurrentUser"
+import { Id } from "../../../../convex/_generated/dataModel"
 
 const JoinWorkspacePage = () => {
   const router = useRouter()
+  const { data:user, isLoading } = useCurrentUser();
   const workspaceId = useWorkSpaceId();
-  const { data: workspace, isLoading } = useGetWorkspacePublicById({ id: workspaceId })
+  const { data: workspace } = useGetWorkspacePublicById({ id: workspaceId })
+  const { mutate, isPending } = useJoin()
   const [code, setCode] = useState("")
-  const [loading, setLoading] = useState(false)
 
-  const handleJoin = async () => {
-    if (!code.trim()) {
-      toast.error("Please enter a valid join code.")
-      return
-    }
-    setLoading(true)
-    try {
-      // Simulate API call
-      await new Promise((res) => setTimeout(res, 1000))
-      toast.success("Successfully joined workspace!")
-      router.push(`/workspace/${code.trim()}`) // adjust route as necessary
-    } catch {
-      toast.error("Failed to join workspace.")
-    } finally {
-      setLoading(false)
-    }
+
+  if (isLoading) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <Loader className="size-6 animate-spin text-muted-foreground"/>
+      </div>
+    )
   }
 
-  const handleEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
+  if (!user) {
+    router.push('/auth')
+    toast.info("You must be logged in!")
+  }
+
+  if (workspace?.isMember) {
+    router.replace(`/workspace/${workspaceId}`)
+    toast.info("You are already a member of this workspace.")
+    return
+  }
+
+  const handleJoin = async () => {
+    mutate({
+      workspaceId,
+      joinCode: code
+    },
+    {
+      onSuccess: (id: Id<"workspaces"> | null) => {
+        router.replace(`/workspace/${id}`)
+        toast.success("Workspace joined")
+      },
+      onError: () => {
+        toast.error("Failed to join workspace")
+      }
+    }
+  )
+  }
+
+  const handleChange = (value: string) => {
+    setCode(value)
+    if (value.length === 6) {
       handleJoin()
     }
   }
@@ -72,7 +94,7 @@ const JoinWorkspacePage = () => {
       </p>
 
       <div className="mt-6 space-y-4">
-        <InputOTP maxLength={6}>
+        <InputOTP maxLength={6} value={code} onChange={handleChange} disabled={isPending}>
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
@@ -85,9 +107,9 @@ const JoinWorkspacePage = () => {
         <Button
           className="w-full"
           onClick={handleJoin}
-          disabled={loading}
+          disabled={isPending}
         >
-          {loading ? "Joining…" : "Join Workspace"}
+          {isPending ? "Joining…" : "Join Workspace"}
         </Button>
       </div>
     </div>
