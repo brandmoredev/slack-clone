@@ -23,7 +23,16 @@ const schema = defineSchema({
     workspaceId: v.id("workspaces"),
     userId: v.id("users")
   })
-    .index("by_workspace_id", ["workspaceId"])
+    .index("by_workspace_id", ["workspaceId"]),
+  channelMembers: defineTable({
+    userId: v.id("users"),
+    channelId: v.id("channels"),
+    role: v.union(v.literal("admin"), v.literal("member"))
+  })
+    .index("by_channel_id", ["channelId"])
+    .index("by_user_id", ["userId"])
+    .index("by_channel_id_user_id", ["channelId", "userId"])
+
 })
 
 export default schema
