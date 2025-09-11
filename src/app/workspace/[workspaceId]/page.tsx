@@ -43,7 +43,7 @@ const WorkspacePage = () => {
     memberLoading
   ])
 
-  if (workspaceLoading || channelsLoading) {
+  if (workspaceLoading || channelsLoading || memberLoading) {
     return (
       <div className="h-full flex-1 flex justify-center items-center gap-2">
         <Loader className="size-5 animate-spin text-muted-foreground" />
@@ -51,7 +51,7 @@ const WorkspacePage = () => {
     )
   }
 
-  if (!workspace) {
+  if (!workspace || !member) {
     return (
       <div className="h-full flex-1 flex justify-center items-center gap-2">
         <TriangleAlert className="size-6 text-muted-foreground" />

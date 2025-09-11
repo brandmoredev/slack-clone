@@ -1,6 +1,7 @@
 import { getAuthUserId } from "@convex-dev/auth/server";
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
+import { parse } from "path";
 
 export const create = mutation({
   args: {
@@ -37,6 +38,99 @@ export const create = mutation({
   }
 })
 
+export const update = mutation({
+  args: {
+    id: v.id("channels"),
+    name: v.string()
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const channel = await ctx.db.get(args.id)
+
+    if (!channel) return null;
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => 
+        q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+      )
+      .unique()
+
+    if (!member || member.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+
+    const parsedName = args.name.trim().toLowerCase().replace(/\s+/g, '-')
+
+    return await ctx.db.patch(args.id, {
+      name: parsedName
+    })
+  }
+})
+
+export const remove = mutation({
+  args: {
+    id: v.id("channels"),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const channel = await ctx.db.get(args.id)
+
+    if (!channel) return null;
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => 
+        q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+      )
+      .unique()
+
+    if (!member || member.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+
+    await ctx.db.delete(args.id)
+
+    return args.id
+  }
+})
+
+
+export const getById = query({
+  args: {
+    id: v.id("channels")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) return null;
+
+    const channel = await ctx.db.get(args.id)
+
+    if (!channel) return null;
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => 
+        q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+      )
+      .unique()
+
+    if (!member) return null;
+
+    return channel;
+  }
+})
 
 export const get = query({
   args: {
@@ -64,5 +158,38 @@ export const get = query({
       .collect()
 
     return channels;
+  }
+})
+
+export const getCreatorInfoByChannelId = query({
+  args: {
+    id: v.id("channels")
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx)
+
+    if (!userId) return null;
+
+    const channel = await ctx.db.get(args.id)
+
+    if (!channel) return null;
+
+    const member = await ctx.db
+      .query("members")
+      .withIndex("by_workspace_id_user_id", (q) => 
+        q.eq("workspaceId", channel.workspaceId).eq("userId", userId)
+      )
+      .unique()
+
+    if (!member) return null;
+
+    const creator = await ctx.db.get(channel.userId)
+
+    if (!creator) return null;
+
+    return {
+      name: creator.name,
+      email: creator.email
+    }
   }
 })
