@@ -28,7 +28,7 @@ export const SideBar = () => {
               <PlusIcon />
             </Button>
         </Hint>
-        <Hint label="User Profile" side="right">
+        <Hint label="User Profile" side="top">
           <div>
             <UserButton />
           </div>

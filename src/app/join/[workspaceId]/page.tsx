@@ -2,13 +2,6 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog"
 
 import {
   InputOTP,
@@ -54,10 +47,10 @@ const JoinWorkspacePage = () => {
     return
   }
 
-  const handleJoin = async () => {
+  const handleJoin = async (value: string) => {
     mutate({
       workspaceId,
-      joinCode: code
+      joinCode: value
     },
     {
       onSuccess: (id: Id<"workspaces"> | null) => {
@@ -74,7 +67,7 @@ const JoinWorkspacePage = () => {
   const handleChange = (value: string) => {
     setCode(value)
     if (value.length === 6) {
-      handleJoin()
+      handleJoin(value)
     }
   }
 
@@ -94,7 +87,13 @@ const JoinWorkspacePage = () => {
       </p>
 
       <div className="mt-6 space-y-4">
-        <InputOTP maxLength={6} value={code} onChange={handleChange} disabled={isPending}>
+        <InputOTP
+          maxLength={6}
+          value={code}
+          onChange={handleChange}
+          disabled={isPending}
+          autoFocus
+        >
           <InputOTPGroup>
             <InputOTPSlot index={0} />
             <InputOTPSlot index={1} />
@@ -106,7 +105,7 @@ const JoinWorkspacePage = () => {
         </InputOTP>
         <Button
           className="w-full"
-          onClick={handleJoin}
+          onClick={() => handleJoin(code)}
           disabled={isPending}
         >
           {isPending ? "Joining…" : "Join Workspace"}

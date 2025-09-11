@@ -80,7 +80,7 @@ const SignInCard = ({ setState }: SignInCardProps) => {
               size="lg"
               disabled={pending}
               >
-              Sign in with email
+              {pending ? "Signing in..." : "Sign in with email"}
             </Button>
           </form>
 
