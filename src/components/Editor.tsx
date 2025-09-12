@@ -1,5 +1,5 @@
-import Quill, { QuillOptions } from "quill"
-import { useEffect, useRef } from "react"
+import Quill, { Delta, Op, QuillOptions } from "quill"
+import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react"
 
 import "quill/dist/quill.snow.css"
 import { Button } from "./ui/button"
@@ -8,12 +8,48 @@ import { MdSend } from "react-icons/md"
 import { ImageIcon, Smile } from "lucide-react"
 import { Hint } from "./ui/hint"
 
-interface EditorProps {
-  variant?: "create" | "update"
+type EditorValue = {
+  image: File | null;
+  body: string
 }
 
-const Editor = ({ variant = "create" }: EditorProps) => {
+interface EditorProps {
+  onSubmit: ({ image, body }: EditorValue) => void;
+  onCancel?: () => void;
+  placeholder?: string;
+  defaultValue?: Delta | Op[];
+  disabled?: boolean;
+  innerRef?: RefObject<Quill | null>
+  variant?: "create" | "update";
+}
+
+const Editor = ({
+  onCancel,
+  onSubmit,
+  placeholder = "Write something",
+  defaultValue = [],
+  disabled = false,
+  innerRef,
+  variant = "create",
+  
+}: EditorProps) => {
+  const [text, setText] = useState("")
   const containerRef = useRef<HTMLDivElement>(null)
+
+  const submitRef = useRef(onSubmit)
+  const placeholderRef = useRef(placeholder)
+  const quillRef = useRef<Quill | null>(null)
+  const cancelRef = useRef(onCancel)
+  const defaultValueRef = useRef(defaultValue)
+  const disabledRef = useRef(disabled)
+
+  useLayoutEffect(() => {
+    submitRef.current = onSubmit;
+    placeholderRef.current = placeholder;
+    defaultValueRef.current = defaultValue;
+    disabledRef.current = disabled
+  })
+
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -25,16 +61,36 @@ const Editor = ({ variant = "create" }: EditorProps) => {
 
     const options: QuillOptions = {
       theme: "snow",
+      placeholder: placeholderRef.current
     }
 
-    new Quill(editorContainer, options)
+    const quill = new Quill(editorContainer, options)
+    quillRef.current = quill;
+    quillRef.current.focus()
+
+    if (innerRef) {
+      innerRef.current = quill
+    }
+
+    quill.setContents(defaultValueRef.current)
+    setText(quill.getText())
+
+    quill.on(Quill.events.TEXT_CHANGE, () => {
+      setText(quill.getText())
+    })
 
     return () => {
+      quill.off(Quill.events.TEXT_CHANGE)
       if (container) {
         container.innerHTML = ""
       }
+      quillRef.current = null
+      if (innerRef) {
+        innerRef.current = null
+      }
     }
-  }, [])
+  }, [innerRef])
+
 
   return (
     <div className="flex flex-col pb-2.5">
