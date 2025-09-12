@@ -3,7 +3,7 @@
 import { useGetChannelById } from "@/features/channels/api/useGetChannelById"
 import { useChannelId } from "@/hooks/useChannelId"
 import { Loader, TriangleAlert } from "lucide-react"
-import { Header } from "./header"
+import { Header } from "./(header)/header"
 import { useGetCreatorInfo } from "@/features/channels/api/useGetCreatorInfo"
 
 const ChannelIdPage = () => {

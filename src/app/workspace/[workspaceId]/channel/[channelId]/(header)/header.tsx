@@ -13,13 +13,15 @@ import { useRouter } from "next/navigation"
 import { useMemo, useRef } from "react"
 import { PiCaretDown } from "react-icons/pi"
 import { toast } from "sonner"
+import { AddModal } from "./addModal"
+
 
 interface HeaderProps {
   title: string,
   creator: {
-    name: string,
-    email: string
-  }
+    name: string | undefined
+    email: string | undefined
+  } | null | undefined
 }
 
 export const Header = ({ title, creator }: HeaderProps) => {
@@ -84,7 +86,7 @@ export const Header = ({ title, creator }: HeaderProps) => {
 
 
   return (
-    <div className="min-h-[50px] border-b py-2 px-4 overflow-hidden bg-white">
+    <div className="min-h-[50px] border-b py-2 px-4 overflow-hidden bg-white flex justify-between">
       <ConfirmDeleteDialog />
       <ConfirmUpdateDialog
         renderChildren={() => (
@@ -155,6 +157,8 @@ export const Header = ({ title, creator }: HeaderProps) => {
           }
         </DialogContent>
       </Dialog>
+
+      <AddModal />
     </div>
   )
 }
