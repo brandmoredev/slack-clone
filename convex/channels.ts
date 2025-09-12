@@ -156,12 +156,35 @@ export const get = query({
 
     if (!member) return [];
 
-    const channels = await ctx.db
-      .query("channels")
-      .withIndex("by_workspace_id", (q) =>
-        q.eq("workspaceId", args.workspaceId)
+    const channelMembers = await ctx.db
+      .query("channelMembers")
+      .withIndex("by_user_id", (q) =>
+        q.eq("userId", userId)
       )
       .collect()
+
+    let channels;
+
+    if (member.role === "admin") {
+      channels = await ctx.db
+        .query("channels")
+        .withIndex("by_workspace_id", (q) =>
+          q.eq("workspaceId", args.workspaceId)
+        )
+        .collect()
+    }
+
+  if (member.role === "member") {
+    // Member: only fetch channels they're explicitly a member of
+    const channelIds = channelMembers.map((cm) => cm.channelId);
+
+    channels = await Promise.all(
+      channelIds.map((channelId) => ctx.db.get(channelId))
+    );
+
+    // Filter out nulls (e.g. deleted channels)
+    channels = channels.filter((ch): ch is NonNullable<typeof ch> => !!ch);
+  }
 
     return channels;
   }

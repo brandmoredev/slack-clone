@@ -3,7 +3,7 @@
 import { SideBar } from "./(sidebar)/sidebar"
 import { Toolbar } from "./toolbar"
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable"
-import { WorkspaceSideBar } from "./workspaceSideBar"
+import { WorkspaceSideBar } from "./(workspaceSideBar)/workspaceSideBar"
 
 
 interface WorkSpaceIdLayourProp {

@@ -7,6 +7,9 @@ import { useGetChannelById } from "@/features/channels/api/useGetChannelById"
 import { useState } from "react"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useCurrentChannelMember } from "@/features/channelMembers/api/useCurrentChannelMember"
+import { useCreateChannelMember } from "@/features/channelMembers/api/useCreateChannelMember"
+import { toast } from "sonner"
+import { Id } from "../../../../../../../convex/_generated/dataModel"
 
 
 export const AddModal = () => {
@@ -14,9 +17,19 @@ export const AddModal = () => {
   const channelId = useChannelId();
   const { data: channel, isLoading: channelLoading } = useGetChannelById({ id: channelId })
   const { data: channelMember, isLoading: channelMemberLoading } = useCurrentChannelMember({ channelId })
+  const { mutate: addMember, isPending } = useCreateChannelMember();
 
   const handleAdd = () => {
-    console.log(selected)
+    selected.forEach((item) => {
+      addMember({ channelId, userId: item.value as Id<"users"> }, {
+        onSuccess: () => {
+          toast.success(`${item.name} has been added.`)
+        },
+        onError: () => {
+          toast.error(`Failed to add ${item.name}`)
+        }
+      })
+    })
   }
 
 
@@ -57,8 +70,9 @@ export const AddModal = () => {
         <Button
           className="w-max ml-auto"
           onClick={handleAdd}
+          disabled={isPending}
         >
-          Add
+          {isPending ? "Adding members" : "Add"}
         </Button>
       </DialogContent>
     </Dialog>
