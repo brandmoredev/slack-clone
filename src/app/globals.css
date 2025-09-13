@@ -141,6 +141,8 @@ body,
   font-family: "Lato", sans-serif !important;
   border: none !important;
   height: unset !important;
+  max-height: 300px !important;
+  overflow-y: auto;
 }
 
 .ql-editor {
