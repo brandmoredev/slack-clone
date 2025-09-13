@@ -7,6 +7,8 @@ import { PiTextAa } from "react-icons/pi"
 import { MdSend } from "react-icons/md"
 import { ImageIcon, Smile } from "lucide-react"
 import { Hint } from "./ui/hint"
+import { EmojiPopover } from "./ui/EmojiPopover"
+import { EmojiClickData } from "emoji-picker-react"
 
 type EditorValue = {
   image: File | null;
@@ -126,6 +128,23 @@ const Editor = ({
     }
   }
 
+  const onEmojiClick = (emoji: EmojiClickData) => {
+    const quill = quillRef.current;
+
+    if (!quill) return;
+
+    quill.focus();
+    const selection = quill.getSelection();
+    const index = selection?.index ?? 0;
+    console.log(text)
+
+    quill.insertText(index, emoji.emoji);
+
+    // quill.setSelection(index + emoji.emoji.length, 0);
+
+    quill.focus();
+  };
+
   const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
@@ -142,15 +161,14 @@ const Editor = ({
               <PiTextAa className="size-4"/>
             </Button>
           </Hint>
-          <Hint label="emoji">
+          <EmojiPopover onEmojiClick={onEmojiClick}>
             <Button
               disabled={disabled}
               variant="ghost"
-              onClick={() => {}}
             >
               <Smile className="size-4"/>
             </Button>
-          </Hint>
+          </EmojiPopover>
           { variant === "update" &&
             <div className="ml-auto flex items-center gap-x-2">
             <Button

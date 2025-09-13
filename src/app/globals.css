@@ -127,6 +127,7 @@ body,
   }
 }
 
+/* Quill Editor */
 .ql-toolbar {
   border: none !important;
   background-color: #f8f8f8 !important;
@@ -151,7 +152,7 @@ body,
   color: #1d1c1d !important;
   font-weight: 400 !important;
   font-family: "Lato", sans-serif !important;
-  size: 14px !important;
+  font-size: 16px !important;
 }
 
 .ql-editor a {
@@ -174,4 +175,22 @@ body,
   font-size: 14px !important;
   font-weight: 400 !important;
   @apply truncate
+}
+
+/* Emoji Picker */
+.EmojiPickerReact {
+  --epr-emoji-size: 22px !important;
+  --epr-emoji-gap: 4px !important;
+  --epr-text: 12px !important
+}
+
+.EmojiPickerReact .epr-emoji-name {
+  font-size: 12px !important;
+  color: #777;
+  font-weight: 500;
+}
+
+.EmojiPickerReact .epr-emoji-category-label {
+  font-size: 12px !important;
+  color: black !important
 }
