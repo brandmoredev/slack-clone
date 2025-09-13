@@ -15,9 +15,10 @@ interface ChatInputProps {
 }
 
 interface CreateMessageValues {
-  channelId: Id<"channels">;
   workspaceId: Id<"workspaces">;
   body: string;
+  channelId?: Id<"channels">;
+  conversationId?: Id<"conversations">;
   image?: Id<"_storage">
 }
 
