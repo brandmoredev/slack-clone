@@ -1,5 +1,5 @@
 import { GetMessagesReturnType } from "@/features/messages/api/useGetMessages";
-import { format, formatDate, isToday, isYesterday, parseISO } from "date-fns";
+import { differenceInMinutes, format, formatDate, isToday, isYesterday, parseISO } from "date-fns";
 import { MessageItem, Reaction } from "./MessageItem";
 
 interface MessageListProps {
@@ -39,15 +39,16 @@ export const MessageList = ({
     return groups;
   }, {} as Record<string, typeof data>)
 
-  function formatDateLabel(dateKey: string) {
-  const date = parseISO(dateKey); // converts "2025-09-16" string into a Date object
+  const formatDateLabel = (dateKey: string) => {
+    const date = parseISO(dateKey); // converts "2025-09-16" string into a Date object
 
-  if (isToday(date)) return "Today";
-  if (isYesterday(date)) return "Yesterday";
+    if (isToday(date)) return "Today";
+    if (isYesterday(date)) return "Yesterday";
 
-  return format(date, "MMM d, yyyy"); // fallback for other days
-}
+    return format(date, "MMM d, yyyy"); // fallback for other days
+  }
 
+  const TIME_THRESHOLD = 3;
 
   return (
     <div className="flex-1 flex flex-col-reverse pb-2 overflow-y-auto">
@@ -60,22 +61,33 @@ export const MessageList = ({
             </span>
           </div>
           <div>
-            {messages.map(message => (
-              <MessageItem
-                key={message._id}
-                id={message._id}
-                body={message.body}
-                createdAt={message._creationTime}
-                updatedAt={message.updatedAt}
-                authorName={message.user.name!}
-                authorImage={message.user.image}
-                image={message.image}
-                reactions={message.reactions as unknown as Reaction[]}
-                threadCount={message.threadCount}
-                threadImage={message.threadImage}
-                threadTimestamp={message.threadsTimestamp}
-              />
-            ))}
+            {messages.map((message, index) => {
+              const prevMessage = messages[index - 1]
+              const isCompact =
+                prevMessage &&
+                prevMessage.user._id === message.user._id &&
+                differenceInMinutes(
+                  new Date(message._creationTime),
+                  new Date(prevMessage._creationTime)
+                ) < TIME_THRESHOLD
+              return (
+                <MessageItem
+                  key={message._id}
+                  id={message._id}
+                  body={message.body}
+                  createdAt={message._creationTime}
+                  updatedAt={message.updatedAt}
+                  authorName={message.user.name!}
+                  authorImage={message.user.image}
+                  image={message.image}
+                  reactions={message.reactions as unknown as Reaction[]}
+                  threadCount={message.threadCount}
+                  threadImage={message.threadImage}
+                  threadTimestamp={message.threadsTimestamp}
+                  isCompact={isCompact}
+                />
+              )
+            })}
           </div>
         </div>
       ))}

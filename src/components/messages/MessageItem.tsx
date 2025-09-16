@@ -1,10 +1,11 @@
 "use client"
 
-import { formatDistanceToNow } from "date-fns"
+import { format, formatDistanceToNow } from "date-fns"
 import Image from "next/image"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { Doc, Id } from "../../../convex/_generated/dataModel"
 import dynamic from "next/dynamic"
+import { cn } from "@/lib/utils"
 
 const Renderer = dynamic(() => import("@/components/messages/Renderer"), { ssr: false })
 
@@ -33,6 +34,9 @@ interface MessageItemProps {
   threadCount?: number;
   threadImage?: string;
   threadTimestamp?: number;
+
+  // Variant
+  isCompact: boolean
 }
 
 export const MessageItem = ({
@@ -47,25 +51,35 @@ export const MessageItem = ({
   threadCount = 0,
   threadImage,
   threadTimestamp,
+  isCompact
 }: MessageItemProps) => {
-  const timestamp = formatDistanceToNow(new Date(createdAt), {
-    addSuffix: true,
-  })
+  const timestamp = format(new Date(createdAt), "HH:mm")
 
   return (
-    <div className="flex gap-4 px-4 py-3 hover:bg-muted/50 transition group w-full">
+    <div className={cn(
+      "flex gap-4 px-4 py-3 hover:bg-sky-50 transition group w-full group",
+      isCompact && "px-6"
+      )}
+    >
       {/* Avatar */}
-      <Avatar className="h-9 w-9 mt-1">
-        <AvatarImage src={authorImage || ""} alt={authorName} />
-        <AvatarFallback className="bg-white">{authorName.charAt(0)}</AvatarFallback>
-      </Avatar>
+      { !isCompact ?
+        <Avatar className="h-9 w-9 mt-1">
+          <AvatarImage src={authorImage || ""} alt={authorName} />
+          <AvatarFallback className="bg-white">{authorName.charAt(0)}</AvatarFallback>
+        </Avatar> :
+        <div className="flex items-start pt-1">
+          <span className="text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition">{timestamp}</span>
+        </div>
+      }
 
       {/* Message Content */}
       <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold">{authorName}</p>
-          <span className="text-xs text-muted-foreground">{timestamp}</span>
-        </div>
+        { !isCompact &&
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-semibold">{authorName}</p>
+            <span className="text-xs text-muted-foreground">{timestamp}</span>
+          </div>
+        }
 
         <div className="text-sm whitespace-pre-wrap break-words text-primary mt-0.5">
           {/* {content} */}
