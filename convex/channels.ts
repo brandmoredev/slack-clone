@@ -134,6 +134,14 @@ export const getById = query({
 
     if (!member) return null;
 
+    const channelMember = await ctx.db
+      .query("channelMembers")
+      .withIndex("by_channel_id_user_id", (q) =>
+        q.eq("channelId", args.id).eq("userId", userId)
+      )
+
+    if (member.role !== "admin" && !channelMember) return null;
+
     return channel;
   }
 })
