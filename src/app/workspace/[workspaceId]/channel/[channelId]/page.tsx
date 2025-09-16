@@ -5,23 +5,20 @@ import { useChannelId } from "@/hooks/useChannelId"
 import { Loader, TriangleAlert } from "lucide-react"
 import { Header } from "./(header)/header"
 import { useGetCreatorInfo } from "@/features/channels/api/useGetCreatorInfo"
-import { useCurrentChannelMember } from "@/features/channelMembers/api/useCurrentChannelMember"
 import { ChatInput } from "./chatInput"
 import { useGetMessages } from "@/features/messages/api/useGetMessages"
 import { useWorkSpaceId } from "@/hooks/useWorkSpaceId"
+import { MessageList } from "@/components/messages/MessageList"
 
 const ChannelIdPage = () => {
   const channelId = useChannelId();
   const workspaceId = useWorkSpaceId()
 
-  const { results } = useGetMessages({ channelId, workspaceId })
+  const { results, status, loadMore } = useGetMessages({ channelId, workspaceId })
   const { data: creator } = useGetCreatorInfo({ id: channelId })
   const { data: channel, isLoading: channelLoading } = useGetChannelById({ id: channelId })
-  const { data: channelMember, isLoading: channelMemberLoading } = useCurrentChannelMember({ channelId })
 
-  console.log(results)
-
-  if (channelLoading || channelMemberLoading) {
+  if (channelLoading || status === "LoadingFirstPage") {
     return (
       <div className="h-full flex-1 flex items-center justify-center">
         <Loader className="size-6 animate-spin text-muted-foreground"/>
@@ -29,8 +26,7 @@ const ChannelIdPage = () => {
     )
   }
 
-  // TODO: remove channel member checking. update channel to check if member
-  if (!channel || !channelMember) {
+  if (!channel) {
     return (
       <div className="h-full flex-1 flex flex-col items-center justify-center gap-y-2">
         <TriangleAlert className="size-6 text-muted-foreground"/>
@@ -42,9 +38,14 @@ const ChannelIdPage = () => {
   return (
     <div className="h-full flex flex-col">
       <Header title={channel.name} creator={creator}/>
-      <div className="flex-1">
-        { JSON.stringify(results)}
-      </div>
+      <MessageList
+        channelName={channel.name}
+        channelCreationTime={channel._creationTime}
+        data={results}
+        loadMore={loadMore}
+        isLoadingMore={status === "LoadingMore"}
+        canLoadMore={status === "CanLoadMore"}
+      />
       <ChatInput placeholder={`Message # ${channel.name}`}/>
     </div>
   )
