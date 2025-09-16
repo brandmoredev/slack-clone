@@ -19,6 +19,8 @@ const ChannelIdPage = () => {
   const { data: channel, isLoading: channelLoading } = useGetChannelById({ id: channelId })
   const { data: channelMember, isLoading: channelMemberLoading } = useCurrentChannelMember({ channelId })
 
+  console.log(results)
+
   if (channelLoading || channelMemberLoading) {
     return (
       <div className="h-full flex-1 flex items-center justify-center">

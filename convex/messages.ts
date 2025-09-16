@@ -1,8 +1,7 @@
 import { v } from "convex/values";
 import { query, mutation, QueryCtx } from "./_generated/server";
-import { Id } from "./_generated/dataModel";
+import { Doc, Id } from "./_generated/dataModel";
 import { getAuthUserId } from "@convex-dev/auth/server";
-import { count } from "console";
 import { paginationOptsValidator } from "convex/server";
 
 const getMember = async (
@@ -139,7 +138,59 @@ export const create = mutation({
 })
 
 
-// Channel messages
+// GET MESSAGES
+async function enrichMessages(ctx: QueryCtx, messages: Doc<"messages">[]) {
+  const enriched = await Promise.all(
+    messages.map(async (message) => {
+      const member = await populateMember(ctx, message.memberId);
+      const user = member ? await populateUser(ctx, member.userId) : null;
+
+      if (!member || !user) {
+        return null;
+      }
+
+      const reactions = await populateReactions(ctx, message._id);
+      const threads = await populateThread(ctx, message._id);
+      const image = message.image
+        ? await ctx.storage.getUrl(message.image)
+        : undefined;
+
+      const reactionsWithCounts = Object.values(
+        reactions.reduce((acc: {
+          [key: string]: Doc<"reactions"> & { count: number; memberIds: Id<"members">[] }
+        }, reaction) => {
+          if (!acc[reaction.value]) {
+            acc[reaction.value] = { ...reaction, memberIds: [member._id], count: 1 };
+          } else {
+            acc[reaction.value].count += 1;
+            acc[reaction.value].memberIds.push(member._id);
+          }
+          return acc;
+        }, {})
+      ).map(({ messageId, value, count, memberIds }) => ({
+        messageId,
+        value,
+        count,
+        memberIds
+      }));
+
+      return {
+        ...message,
+        image,
+        member,
+        user,
+        reactions: reactionsWithCounts,
+        threadCount: threads.count,
+        threadImage: threads.image,
+        threadsTimestamp: threads.timestamp
+      };
+    })
+  );
+
+  return enriched.filter(m => m !== null);
+}
+
+
 export const get = query({
   args: {
     workspaceId: v.id("workspaces"),
@@ -178,7 +229,7 @@ export const get = query({
 
       // for messages in parent_id in conversation_id
       if (args.parentMessageId && _conversationId) {
-        return await ctx.db
+        const results = await ctx.db
           .query("messages")
           .withIndex("by_channel_id_parent_message_id_conversation_id", (q) =>
             q
@@ -188,16 +239,26 @@ export const get = query({
           )
           .order("desc")
           .paginate(args.paginationOpts);
+        
+        return {
+        ...results,
+        page: await enrichMessages(ctx, results.page)
+      }
       }
 
       // messages in channel_id
-      return await ctx.db
+      const results = await ctx.db
         .query("messages")
         .withIndex("by_channel_id", (q) =>
           q.eq("channelId", args.channelId!)
         )
         .order("desc")
         .paginate(args.paginationOpts);
+
+      return {
+        ...results,
+        page: await enrichMessages(ctx, results.page)
+      }
     }
 
     //For direct messages
@@ -211,7 +272,7 @@ export const get = query({
         throw new Error("Unauthorized");
       }
 
-      const messages = await ctx.db
+      const results = await ctx.db
         .query("messages")
         .withIndex("by_conversation_id", (q) =>
           q.eq("conversationId", args.conversationId)
@@ -219,7 +280,10 @@ export const get = query({
         .order("desc")
         .paginate(args.paginationOpts);
 
-      return messages
+      return {
+        ...results,
+        page: await enrichMessages(ctx, results.page)
+      }
     }
     
     return {
